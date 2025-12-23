@@ -121,7 +121,6 @@ export default function Profile() {
 
   return (
     <div>
-      {t('title')}
       <PageHeader heading="Our Products for You" text="Checkout Something Cool" />
       <CategoriesMenu categories={categoriesData} />
       <ProductList data={productsData}>
