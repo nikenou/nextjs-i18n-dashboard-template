@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
