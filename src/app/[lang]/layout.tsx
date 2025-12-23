@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
-import Navbar from "@/components/Navbar";
+import Navbar from "./components/Navbar";
+// import Navbar from "@/components/Navbar";
 import Content from "@/components/Content";
 import Sidebar from "@/components/Sidebar";
 
@@ -65,18 +66,31 @@ interface Props {
 export default async function Root({ params, children }: Props) {
   const user = await getUser();
   const global = await getGlobal(params.lang);
-  console.log('global', global);
+
   // TODO: CREATE A CUSTOM ERROR PAGE
   if (!global.data) return null;
+
+  const { navbar, footer } = global.data.attributes;
+
+  const navbarLogoUrl = getStrapiMedia(
+    navbar.navbarLogo.logoImg.data?.attributes.url
+  );
+
+  const footerLogoUrl = getStrapiMedia(
+    footer.footerLogo.logoImg.data?.attributes.url
+  );
 
   return (
     <html lang={params.lang}>
     <body className="relative min-h-screen overflow-y-auto bg-gray-50">
-    <Navbar locale={params.lang} user={user} />
+    {/*<Navbar locale={params.lang} user={user} />*/}
+      <Navbar
+        links={navbar.links}
+        logoUrl={navbarLogoUrl}
+        logoText={navbar.navbarLogo.logoText}
+      />
 
-    <Content>{children}</Content>
-
-    <Sidebar locale={params.lang} />
+      <Content>{children}</Content>
     </body>
     </html>
   );
