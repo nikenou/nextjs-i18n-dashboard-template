@@ -1,4 +1,3 @@
-import {useTranslations} from 'next-intl';
 import React, { Suspense } from "react";
 import Image from "next/image";
 import Card from "@/components/Card";

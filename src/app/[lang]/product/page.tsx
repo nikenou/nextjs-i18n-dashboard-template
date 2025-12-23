@@ -1,5 +1,4 @@
 "use client";
-import {useTranslations} from 'next-intl';
 import { useState, useEffect, useCallback } from "react";
 import { fetchAPI } from "../utils/fetch-api";
 
@@ -119,8 +118,7 @@ export default function Profile() {
   }, [fetchData]);
 
   if (isLoading) return <Loader />;
-  
-  const t = useTranslations('HomePage');
+
   return (
     <div>
       {t('title')}
