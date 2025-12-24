@@ -3,6 +3,7 @@ import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 // import Navbar from "@/components/Navbar";
 import Content from "@/components/Content";
 import Sidebar from "@/components/Sidebar";
@@ -13,7 +14,8 @@ import { Locale } from "@/lib/definitions";
 import { i18n } from "../../../i18n-config";
 import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
 
-import "@/app/globals.css";
+import "./globals.css";
+// import "@/app/globals.css";
 
 async function getGlobal(lang: string): Promise<any> {
   const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
@@ -58,12 +60,13 @@ export async function generateMetadata({ params } : { params: {lang: string}}): 
   };
 }
 
-interface Props {
-  params: { lang: Locale };
-  children: React.ReactNode;
-}
-
-export default async function Root({ params, children }: Props) {
+export default async function RootLayout({
+  children,
+  params,
+}: {
+  readonly children: React.ReactNode;
+  readonly params: { lang: string };
+}) {
   const user = await getUser();
   const global = await getGlobal(params.lang);
 
@@ -90,7 +93,20 @@ export default async function Root({ params, children }: Props) {
         logoText={navbar.navbarLogo.logoText}
       />
 
-      <Content>{children}</Content>
+      {/*<Content>{children}</Content>*/}
+
+      <main className="dark:bg-black dark:text-gray-100 min-h-screen">
+        {children}
+      </main>
+
+      <Footer
+        logoUrl={footerLogoUrl}
+        logoText={footer.footerLogo.logoText}
+        menuLinks={footer.menuLinks}
+        categoryLinks={footer.categories.data}
+        legalLinks={footer.legalLinks}
+        socialLinks={footer.socialLinks}
+      />
     </body>
     </html>
   );

@@ -17,15 +17,29 @@ function getLocale(request: NextRequest): string | undefined {
   // Use negotiator and intl-localematcher to get best locale
   let languages = new Negotiator({ headers: negotiatorHeaders }).languages(locales);
 
-  const locale = matchLocale(languages, locales, i18n.defaultLocale);
-
-  return locale;
+  try {
+    return matchLocale(languages, locales, i18n.defaultLocale);
+  } catch (e) {
+    // Invalid accept-language header
+    return i18n.defaultLocale;
+  }
 }
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const fallbackPage = "home";
+  // // `/_next/` and `/api/` are ignored by the watcher, but we need to ignore files in `public` manually.
+  // // If you have one
+  if (
+    [
+      '/manifest.json',
+      '/favicon.ico',
+      // Your other files in `public`
+    ].includes(pathname)
+  )
+    return;
+
+  // const fallbackPage = "home";
 
   // Check if there is any supported locale in the pathname
   const pathnameIsMissingLocale = i18n.locales.every(
@@ -41,14 +55,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${locale}/${sanitizedPathname}`, request.url));
   }
 
-  const pathnameIsMissingPage = pathname.split("/").slice(2).join("/") === "";
+  // const pathnameIsMissingPage = pathname.split("/").slice(2).join("/") === "";
 
   // Redirect if there is no page
-  if (pathnameIsMissingPage) {
+  /*if (pathnameIsMissingPage) {
     const sanitizedPathname = pathname.endsWith("/") ? pathname.substring(0, pathname.length - 1) : pathname;
 
     return NextResponse.redirect(new URL(`${sanitizedPathname}/${fallbackPage}`, request.url));
-  }
+  }*/
 }
 
 export const config = {
